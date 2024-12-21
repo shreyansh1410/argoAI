@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Pencil, Trash2, Calendar } from "lucide-react";
 
 export default function BlogCard({ post, onDelete }) {
   const handleDelete = async () => {
@@ -24,7 +25,7 @@ export default function BlogCard({ post, onDelete }) {
         <h2 className="text-xl font-bold mb-2">
           <Link
             href={`/posts/${post._id}`}
-            className="text-blue-300 hover:text-blue-600"
+            className="text-blue-800 hover:text-blue-600 flex items-center"
           >
             {post.title}
           </Link>
@@ -35,18 +36,23 @@ export default function BlogCard({ post, onDelete }) {
         </Link>
 
         <div className="flex justify-between items-center text-sm text-gray-500">
-          <span>{new Date(post.createdAt).toLocaleDateString()}</span>
-          <div className="space-x-2">
+          <div className="flex items-center space-x-2">
+            <Calendar className="w-4 h-4 text-gray-500" />
+            <span>{new Date(post.createdAt).toLocaleDateString()}</span>
+          </div>
+          <div className="space-x-4 flex items-center">
             <Link
               href={`/posts/${post._id}/edit`}
-              className="text-yellow-600 hover:text-yellow-700"
+              className="flex items-center text-yellow-600 hover:text-yellow-700"
             >
+              <Pencil className="w-4 h-4 mr-1" />
               Edit
             </Link>
             <button
               onClick={handleDelete}
-              className="text-red-600 hover:text-red-700"
+              className="flex items-center text-red-600 hover:text-red-700"
             >
+              <Trash2 className="w-4 h-4 mr-1" />
               Delete
             </button>
           </div>

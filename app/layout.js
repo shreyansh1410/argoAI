@@ -10,8 +10,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <div className="min-h-screen bg-gray-50">
-          {/* Navigation Header */}
+        <div className="flex flex-col min-h-screen bg-gray-50">
+
           <nav className="bg-white shadow-sm">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex justify-between h-16">
@@ -25,17 +25,17 @@ export default function RootLayout({ children }) {
                   </Link>
                 </div>
 
-                {/* Navigation Links */}
+
                 <div className="flex items-center space-x-4">
                   <Link
                     href="/posts"
                     className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                   >
-                    All Posts
+                    Home
                   </Link>
                   <Link
                     href="/posts/create"
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium"
+                    className="bg-blue-700 hover:bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium"
                   >
                     Create Post
                   </Link>
@@ -44,16 +44,16 @@ export default function RootLayout({ children }) {
             </div>
           </nav>
 
-          {/* Main Content */}
-          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+ 
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow">
             {children}
           </main>
 
-          {/* Footer */}
-          <footer className="bg-white border-t mt-auto">
+
+          <footer className="bg-white border-t h-auto mt-auto">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
               <p className="text-center text-gray-500 text-sm">
-                © {new Date().getFullYear()} Blog App. All rights reserved.
+                © {new Date().getFullYear()} Blog App by Shreyansh Shukla. All rights reserved.
               </p>
             </div>
           </footer>

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import Loading from "@/components/Loading";
+import { Pencil, Trash2 } from "lucide-react";
 
 export default function PostPage() {
   const router = useRouter();
@@ -59,12 +60,14 @@ export default function PostPage() {
             href={`/posts/${post._id}/edit`}
             className="inline-flex items-center px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
           >
+            <Pencil className="w-4 h-4 mr-1" />
             Edit
           </Link>
           <button
             onClick={handleDelete}
             className="inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
           >
+            <Trash2 className="w-4 h-4 mr-1" />
             Delete
           </button>
         </div>
