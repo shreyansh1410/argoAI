@@ -32,7 +32,7 @@ export default function PostsPage() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold mb-8">Blog Posts</h1>
+      <h1 className="text-3xl font-bold mb-8 text-black">Blog Posts</h1>
       {posts.length === 0 ? (
         <p className="text-center text-gray-500">
           No posts yet. Create your first post!

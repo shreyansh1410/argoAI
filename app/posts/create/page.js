@@ -1,60 +1,52 @@
+"use client";
+
 import { useState } from "react";
-import { useRouter } from "next/router";
-import BlogForm from "../components/BlogForm";
+import { useRouter } from "next/navigation";
+import BlogForm from "@/components/BlogForm";
 
 export default function CreatePost() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (formData) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setError("");
 
     try {
-      // First, generate the AI summary
-      const summaryRes = await fetch("/api/posts/summary", {
+      const response = await fetch("/api/posts", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: formData.content }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
 
-      if (!summaryRes.ok) throw new Error("Failed to generate summary");
-      const { summary } = await summaryRes.json();
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to create post");
+      }
 
-      // Then create the post with the generated summary
-      const createRes = await fetch("/api/posts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: formData.title,
-          content: formData.content,
-          summary,
-        }),
-      });
-
-      if (!createRes.ok) throw new Error("Failed to create post");
-
-      router.push("/");
+      router.push("/posts");
+      router.refresh();
     } catch (err) {
       setError(err.message);
-      console.error(err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Create New Post</h1>
+    <div className="max-w-2xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6 text-black">Create New Post</h1>
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div className="bg-red-50 text-red-500 p-4 rounded-md mb-6">
           {error}
         </div>
       )}
       <BlogForm
         onSubmit={handleSubmit}
-        isLoading={loading}
+        isLoading={isLoading}
         submitLabel="Create Post"
       />
     </div>

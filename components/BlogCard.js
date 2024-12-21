@@ -21,12 +21,19 @@ export default function BlogCard({ post, onDelete }) {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden">
       <div className="p-6">
-        <h2 className="text-xl font-semibold mb-2">
-          <Link href={`/posts/${post._id}`} className="hover:text-blue-600">
+        <h2 className="text-xl font-bold mb-2">
+          <Link
+            href={`/posts/${post._id}`}
+            className="text-blue-300 hover:text-blue-600"
+          >
             {post.title}
           </Link>
         </h2>
-        <p className="text-gray-600 mb-4 line-clamp-3">{post.summary}</p>
+
+        <Link href={`/posts/${post._id}`}>
+          <p className="text-gray-600 mb-4 line-clamp-3">{post.summary}</p>
+        </Link>
+
         <div className="flex justify-between items-center text-sm text-gray-500">
           <span>{new Date(post.createdAt).toLocaleDateString()}</span>
           <div className="space-x-2">

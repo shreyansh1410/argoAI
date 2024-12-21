@@ -1,88 +1,79 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import BlogForm from "../../../components/BlogForm";
+import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import BlogForm from "@/components/BlogForm";
+import Loading from "@/components/Loading";
 
 export default function EditPost() {
   const router = useRouter();
-  const { id } = router.query;
+  const params = useParams();
   const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    if (id) fetchPost();
-  }, [id]);
+    fetchPost();
+  }, [params.id]);
 
   const fetchPost = async () => {
     try {
-      const response = await fetch(`/api/posts/${id}`);
-      if (!response.ok) throw new Error("Failed to fetch post");
+      const response = await fetch(`/api/posts/${params.id}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch post");
+      }
       const data = await response.json();
       setPost(data);
     } catch (err) {
-      setError("Failed to load post");
-      console.error(err);
+      setError(err.message);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   const handleSubmit = async (formData) => {
-    setLoading(true);
-    setError(null);
+    setIsLoading(true);
+    setError("");
 
     try {
-      // Generate new summary if content has changed
-      let summary = post.summary;
-      if (formData.content !== post.content) {
-        const summaryRes = await fetch("/api/posts/summary", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ content: formData.content }),
-        });
-
-        if (!summaryRes.ok) throw new Error("Failed to generate summary");
-        const summaryData = await summaryRes.json();
-        summary = summaryData.summary;
-      }
-
-      // Update the post
-      const updateRes = await fetch(`/api/posts/${id}`, {
+      const response = await fetch(`/api/posts/${params.id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: formData.title,
-          content: formData.content,
-          summary,
-        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
 
-      if (!updateRes.ok) throw new Error("Failed to update post");
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to update post");
+      }
 
-      router.push(`/posts/${id}`);
+      router.push(`/posts/${params.id}`);
+      router.refresh();
     } catch (err) {
       setError(err.message);
-      console.error(err);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  if (loading) return <div className="text-center p-8">Loading...</div>;
-  if (error) return <div className="text-red-500 text-center p-8">{error}</div>;
-  if (!post) return <div className="text-center p-8">Post not found</div>;
+  if (isLoading) return <Loading />;
+  if (error) return <div className="text-red-500 text-center p-4">{error}</div>;
+  if (!post) return <div className="text-center p-4">Post not found</div>;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Edit Post</h1>
+    <div className="max-w-2xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6 text-black">Edit Post</h1>
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div className="bg-red-50 text-red-500 p-4 rounded-md mb-6">
           {error}
         </div>
       )}
       <BlogForm
         onSubmit={handleSubmit}
-        isLoading={loading}
+        isLoading={isLoading}
         initialData={post}
         submitLabel="Update Post"
       />

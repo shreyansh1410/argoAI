@@ -34,7 +34,7 @@ export default function Home() {
         <h1 className="text-3xl font-bold">Blog Posts</h1>
         <Link
           href="/create"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          className="bg-blue-500 px-4 py-2 rounded hover:bg-blue-600 text-black"
         >
           Create New Post
         </Link>
